@@ -13,7 +13,7 @@ can be found in the contrib/init folder.
 Service User
 ---------------------------------
 
-All three Linux startup configurations assume the existence of a "bitcoin" user
+All three Linux startup configurations assume the existence of a "bxcoin" user
 and group.  They must be created before attempting to use these scripts.
 The macOS configuration assumes bitcoind will be set up for the current user.
 
@@ -21,7 +21,7 @@ Configuration
 ---------------------------------
 
 Running bitcoind as a daemon does not require any manual configuration. You may
-set the `rpcauth` setting in the `bitcoin.conf` configuration file to override
+set the `rpcauth` setting in the `bxcoin.conf` configuration file to override
 the default behaviour of using a special cookie for authentication.
 
 This password does not have to be remembered or typed as it is mostly used
@@ -44,7 +44,7 @@ This allows for running bitcoind without having to do any manual configuration.
 relative to the data directory. `wallet` *only* supports relative paths.
 
 For an example configuration file that describes the configuration settings,
-see `share/examples/bitcoin.conf`.
+see `share/examples/bxcoin.conf`.
 
 Paths
 ---------------------------------
@@ -54,30 +54,30 @@ Paths
 All three configurations assume several paths that might need to be adjusted.
 
     Binary:              /usr/bin/bitcoind
-    Configuration file:  /etc/bitcoin/bitcoin.conf
+    Configuration file:  /etc/bxcoin/bxcoin.conf
     Data directory:      /var/lib/bitcoind
     PID file:            /var/run/bitcoind/bitcoind.pid (OpenRC and Upstart) or
                          /run/bitcoind/bitcoind.pid (systemd)
     Lock file:           /var/lock/subsys/bitcoind (CentOS)
 
 The PID directory (if applicable) and data directory should both be owned by the
-bitcoin user and group. It is advised for security reasons to make the
-configuration file and data directory only readable by the bitcoin user and
-group. Access to bitcoin-cli and other bitcoind rpc clients can then be
+bxcoin user and group. It is advised for security reasons to make the
+configuration file and data directory only readable by the bxcoin user and
+group. Access to bxcoin-cli and other bitcoind rpc clients can then be
 controlled by group membership.
 
 NOTE: When using the systemd .service file, the creation of the aforementioned
 directories and the setting of their permissions is automatically handled by
-systemd. Directories are given a permission of 710, giving the bitcoin group
+systemd. Directories are given a permission of 710, giving the bxcoin group
 access to files under it _if_ the files themselves give permission to the
-bitcoin group to do so. This does not allow
+bxcoin group to do so. This does not allow
 for the listing of files under the directory.
 
 NOTE: It is not currently possible to override `datadir` in
-`/etc/bitcoin/bitcoin.conf` with the current systemd, OpenRC, and Upstart init
+`/etc/bxcoin/bxcoin.conf` with the current systemd, OpenRC, and Upstart init
 files out-of-the-box. This is because the command line options specified in the
 init files take precedence over the configurations in
-`/etc/bitcoin/bitcoin.conf`. However, some init systems have their own
+`/etc/bxcoin/bxcoin.conf`. However, some init systems have their own
 configuration mechanisms that would allow for overriding the command line
 options specified in the init files (e.g. setting `BITCOIND_DATADIR` for
 OpenRC).
@@ -85,9 +85,9 @@ OpenRC).
 ### macOS
 
     Binary:              /usr/local/bin/bitcoind
-    Configuration file:  ~/Library/Application Support/Bitcoin/bitcoin.conf
-    Data directory:      ~/Library/Application Support/Bitcoin
-    Lock file:           ~/Library/Application Support/Bitcoin/.lock
+    Configuration file:  ~/Library/Application Support/Bxcoin/bxcoin.conf
+    Data directory:      ~/Library/Application Support/Bxcoin
+    Lock file:           ~/Library/Application Support/Bxcoin/.lock
 
 Installing Service Configuration
 -----------------------------------
@@ -130,14 +130,14 @@ setting the BITCOIND and FLAGS environment variables in the file
 
 ### macOS
 
-Copy org.bitcoin.bitcoind.plist into ~/Library/LaunchAgents. Load the launch agent by
-running `launchctl load ~/Library/LaunchAgents/org.bitcoin.bitcoind.plist`.
+Copy org.bxcoin.bitcoind.plist into ~/Library/LaunchAgents. Load the launch agent by
+running `launchctl load ~/Library/LaunchAgents/org.bxcoin.bitcoind.plist`.
 
 This Launch Agent will cause bitcoind to start whenever the user logs in.
 
 NOTE: This approach is intended for those wanting to run bitcoind as the current user.
-You will need to modify org.bitcoin.bitcoind.plist if you intend to use it as a
-Launch Daemon with a dedicated bitcoin user.
+You will need to modify org.bxcoin.bitcoind.plist if you intend to use it as a
+Launch Daemon with a dedicated bxcoin user.
 
 Auto-respawn
 -----------------------------------

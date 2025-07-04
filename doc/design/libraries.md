@@ -2,18 +2,18 @@
 
 | Name                     | Description |
 |--------------------------|-------------|
-| *libbitcoin_cli*         | RPC client functionality used by *bitcoin-cli* executable |
+| *libbitcoin_cli*         | RPC client functionality used by *bxcoin-cli* executable |
 | *libbitcoin_common*      | Home for common functionality shared by different executables and libraries. Similar to *libbitcoin_util*, but higher-level (see [Dependencies](#dependencies)). |
 | *libbitcoin_consensus*   | Stable, backwards-compatible consensus functionality used by *libbitcoin_node* and *libbitcoin_wallet* and also exposed as a [shared library](../shared-libraries.md). |
 | *libbitcoinconsensus*    | Shared library build of static *libbitcoin_consensus* library |
 | *libbitcoin_kernel*      | Consensus engine and support library used for validation by *libbitcoin_node* and also exposed as a [shared library](../shared-libraries.md). |
-| *libbitcoinqt*           | GUI functionality used by *bitcoin-qt* and *bitcoin-gui* executables |
-| *libbitcoin_ipc*         | IPC functionality used by *bitcoin-node*, *bitcoin-wallet*, *bitcoin-gui* executables to communicate when [`--enable-multiprocess`](multiprocess.md) is used. |
-| *libbitcoin_node*        | P2P and RPC server functionality used by *bitcoind* and *bitcoin-qt* executables. |
+| *libbitcoinqt*           | GUI functionality used by *bxcoin-qt* and *bxcoin-gui* executables |
+| *libbitcoin_ipc*         | IPC functionality used by *bxcoin-node*, *bxcoin-wallet*, *bxcoin-gui* executables to communicate when [`--enable-multiprocess`](multiprocess.md) is used. |
+| *libbitcoin_node*        | P2P and RPC server functionality used by *bitcoind* and *bxcoin-qt* executables. |
 | *libbitcoin_util*        | Home for common functionality shared by different executables and libraries. Similar to *libbitcoin_common*, but lower-level (see [Dependencies](#dependencies)). |
-| *libbitcoin_wallet*      | Wallet functionality used by *bitcoind* and *bitcoin-wallet* executables. |
-| *libbitcoin_wallet_tool* | Lower-level wallet functionality used by *bitcoin-wallet* executable. |
-| *libbitcoin_zmq*         | [ZeroMQ](../zmq.md) functionality used by *bitcoind* and *bitcoin-qt* executables. |
+| *libbitcoin_wallet*      | Wallet functionality used by *bitcoind* and *bxcoin-wallet* executables. |
+| *libbitcoin_wallet_tool* | Lower-level wallet functionality used by *bxcoin-wallet* executable. |
+| *libbitcoin_zmq*         | [ZeroMQ](../zmq.md) functionality used by *bitcoind* and *bxcoin-qt* executables. |
 
 ## Conventions
 
@@ -39,17 +39,17 @@
 
 graph TD;
 
-bitcoin-cli[bitcoin-cli]-->libbitcoin_cli;
+bxcoin-cli[bxcoin-cli]-->libbitcoin_cli;
 
 bitcoind[bitcoind]-->libbitcoin_node;
 bitcoind[bitcoind]-->libbitcoin_wallet;
 
-bitcoin-qt[bitcoin-qt]-->libbitcoin_node;
-bitcoin-qt[bitcoin-qt]-->libbitcoinqt;
-bitcoin-qt[bitcoin-qt]-->libbitcoin_wallet;
+bxcoin-qt[bxcoin-qt]-->libbitcoin_node;
+bxcoin-qt[bxcoin-qt]-->libbitcoinqt;
+bxcoin-qt[bxcoin-qt]-->libbitcoin_wallet;
 
-bitcoin-wallet[bitcoin-wallet]-->libbitcoin_wallet;
-bitcoin-wallet[bitcoin-wallet]-->libbitcoin_wallet_tool;
+bxcoin-wallet[bxcoin-wallet]-->libbitcoin_wallet;
+bxcoin-wallet[bxcoin-wallet]-->libbitcoin_wallet_tool;
 
 libbitcoin_cli-->libbitcoin_util;
 libbitcoin_cli-->libbitcoin_common;
@@ -75,7 +75,7 @@ libbitcoin_wallet_tool-->libbitcoin_wallet;
 libbitcoin_wallet_tool-->libbitcoin_util;
 
 classDef bold stroke-width:2px, font-weight:bold, font-size: smaller;
-class bitcoin-qt,bitcoind,bitcoin-cli,bitcoin-wallet bold
+class bxcoin-qt,bitcoind,bxcoin-cli,bxcoin-wallet bold
 ```
 </td></tr><tr><td>
 
@@ -89,7 +89,7 @@ class bitcoin-qt,bitcoind,bitcoin-cli,bitcoin-wallet bold
 
 - *libbitcoin_util* should also be a standalone dependency that any library can depend on, and it should not depend on other internal libraries.
 
-- *libbitcoin_common* should serve a similar function as *libbitcoin_util* and be a place for miscellaneous code used by various daemon, GUI, and CLI applications and libraries to live. It should not depend on anything other than *libbitcoin_util* and *libbitcoin_consensus*. The boundary between _util_ and _common_ is a little fuzzy but historically _util_ has been used for more generic, lower-level things like parsing hex, and _common_ has been used for bitcoin-specific, higher-level things like parsing base58. The difference between util and common is mostly important because *libbitcoin_kernel* is not supposed to depend on *libbitcoin_common*, only *libbitcoin_util*. In general, if it is ever unclear whether it is better to add code to *util* or *common*, it is probably better to add it to *common* unless it is very generically useful or useful particularly to include in the kernel.
+- *libbitcoin_common* should serve a similar function as *libbitcoin_util* and be a place for miscellaneous code used by various daemon, GUI, and CLI applications and libraries to live. It should not depend on anything other than *libbitcoin_util* and *libbitcoin_consensus*. The boundary between _util_ and _common_ is a little fuzzy but historically _util_ has been used for more generic, lower-level things like parsing hex, and _common_ has been used for bxcoin-specific, higher-level things like parsing base58. The difference between util and common is mostly important because *libbitcoin_kernel* is not supposed to depend on *libbitcoin_common*, only *libbitcoin_util*. In general, if it is ever unclear whether it is better to add code to *util* or *common*, it is probably better to add it to *common* unless it is very generically useful or useful particularly to include in the kernel.
 
 
 - *libbitcoin_kernel* should only depend on *libbitcoin_util* and *libbitcoin_consensus*.
@@ -100,5 +100,5 @@ class bitcoin-qt,bitcoind,bitcoin-cli,bitcoin-wallet bold
 
 ## Work in progress
 
-- Validation code is moving from *libbitcoin_node* to *libbitcoin_kernel* as part of [The libbitcoinkernel Project #24303](https://github.com/bitcoin/bitcoin/issues/24303)
-- Source code organization is discussed in general in [Library source code organization #15732](https://github.com/bitcoin/bitcoin/issues/15732)
+- Validation code is moving from *libbitcoin_node* to *libbitcoin_kernel* as part of [The libbitcoinkernel Project #24303](https://github.com/bxcoin/bxcoin/issues/24303)
+- Source code organization is discussed in general in [Library source code organization #15732](https://github.com/bxcoin/bxcoin/issues/15732)
