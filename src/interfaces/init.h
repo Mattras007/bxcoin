@@ -23,7 +23,7 @@ class Ipc;
 //! and get access to other interfaces (Node, Chain, Wallet, etc).
 //!
 //! There is a different Init interface implementation for each process
-//! (bxcoin-gui, bxcoin-node, bxcoin-wallet, bitcoind, bxcoin-qt) and each
+//! (bxcoin-gui, bxcoin-node, bxcoin-wallet, bxcoind, bxcoin-qt) and each
 //! implementation can implement the make methods for interfaces it supports.
 //! The default make methods all return null.
 class Init

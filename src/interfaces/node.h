@@ -65,7 +65,7 @@ public:
     virtual std::string getName() = 0;
 };
 
-//! Top-level interface for a bxcoin node (bitcoind process).
+//! Top-level interface for a bxcoin node (bxcoind process).
 class Node
 {
 public:

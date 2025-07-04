@@ -13,7 +13,7 @@
 class ArgsManager;
 
 /**
- * CBaseChainParams defines the base parameters (shared between bxcoin-cli and bitcoind)
+ * CBaseChainParams defines the base parameters (shared between bxcoin-cli and bxcoind)
  * of a given instance of the Bxcoin system.
  */
 class CBaseChainParams
