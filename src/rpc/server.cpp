@@ -170,7 +170,7 @@ static RPCHelpMan help()
 
 static RPCHelpMan stop()
 {
-    static const std::string RESULT{PACKAGE_NAME " stopping"};
+    static const std::string RESULT{"Bxcoin Core stopping"};
     return RPCHelpMan{"stop",
     // Also accept the hidden 'wait' integer argument (milliseconds)
     // For instance, 'stop 1000' makes the call wait 1 second before returning

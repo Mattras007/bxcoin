@@ -72,6 +72,7 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         m_chain_type = ChainType::MAIN;
+        m_customLabel = "Mainnet";
 
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
@@ -95,6 +96,7 @@ public:
 
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016 blocks
         consensus.nMinerConfirmationWindow = 2016;       // difficulty window
+        
 
         // BIP9 deployments (for example)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -105,12 +107,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].min_activation_height = 1;
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].min_activation_height = 0;
 
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].min_activation_height = 1;
+        // Initialize buried deployments via height variables (do NOT put these in vDeployments)
+        consensus.CSVHeight = 1;      // Activate CSV at height 1
+        consensus.SegwitHeight = 1;   // Activate SegWit at height 1
+
 
         consensus.nMinimumChainWork = uint256S("0x00");
         consensus.defaultAssumeValid = uint256S("0x00");
@@ -128,10 +130,12 @@ public:
         m_assumed_chain_state_size = 1;  // MB placeholder
 
         // Genesis block (replace with your actual genesis)
-        genesis = CreateGenesisBlock(/*nTime*/ 1751625466, /*nNonce*/ 1451859, /*nBits*/ 0x1e0ffff0, /*nVersion*/ 1, /*genesisReward*/ 50 * COIN);
+        genesis = CreateGenesisBlock(1231006506, 2135924697, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0000022fca7f3af6bc8d92296269fae7eba4c048707ad4ac95802a80eae390b1"));
-        assert(genesis.hashMerkleRoot == uint256S("6cf7734edb52b59e22b13e1a47992e99e8a4bd8146925dfc449350a4f9f010d5"));
+        assert(consensus.hashGenesisBlock == uint256S("cc5b7b38e27fe8b72da6966056c234c8b8f2a97e31372e37f35f0dcc13581a6e"));
+        assert(genesis.hashMerkleRoot == uint256S("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+
+
 
 
         // You must assert your genesis hash here after you generate it
@@ -178,6 +182,7 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         m_chain_type = ChainType::TESTNET;
+        m_customLabel = "Testnet";
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 210000;
@@ -220,24 +225,25 @@ public:
         m_assumed_blockchain_size = 42;
         m_assumed_chain_state_size = 3;
 
-        genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 50 * COIN);
+        // ONLY Testnet-related values here:
+        genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"));
-        assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+        assert(consensus.hashGenesisBlock == uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"));
+        assert(genesis.hashMerkleRoot == uint256S("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+
+
+
 
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("testnet-seed.bxcoin.jonasschnelli.ch.");
-        vSeeds.emplace_back("seed.tbtc.petertodd.net.");
-        vSeeds.emplace_back("seed.testnet.bxcoin.sprovoost.nl.");
-        vSeeds.emplace_back("testnet-seed.bluematt.me."); // Just a static list of stable node(s), only supports x9
+       
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 111); // Testnet 'm' or 'n'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 196);
+        base58Prefixes[SECRET_KEY]     = std::vector<unsigned char>(1, 239);
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF}; // tpub
+        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94}; // tprv
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
-        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
         bech32_hrp = "tb";
 
@@ -317,6 +323,7 @@ public:
         }
 
         m_chain_type = ChainType::SIGNET;
+        m_customLabel = "Signet";
         consensus.signet_blocks = true;
         consensus.signet_challenge.assign(bin.begin(), bin.end());
         consensus.nSubsidyHalvingInterval = 210000;
@@ -354,10 +361,12 @@ public:
         nDefaultPort = 38333;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1598918400, 52613770, 0x1e0377ae, 1, 50 * COIN);
+        // Don't allow multiple genesis blocks. Only this:
+        genesis = CreateGenesisBlock(1700000000, 0, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000008819873e925422c1ff0f99f7cc9bbb232af63a077a480a3633bee1ef6"));
-        assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+        assert(consensus.hashGenesisBlock == uint256S("45d7c12135ea2767ef5c78c49b62dfa031262bbfac283043df7e2ca1005151fc"));
+        assert(genesis.hashMerkleRoot == uint256S("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+
 
         vFixedSeeds.clear();
 
@@ -393,6 +402,7 @@ public:
     explicit CRegTestParams(const RegTestOptions& opts)
     {
         m_chain_type = ChainType::REGTEST;
+        m_customLabel = "Regtest";
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 150;
@@ -435,7 +445,7 @@ public:
 
         for (const auto& [dep, height] : opts.activation_heights) {
             switch (dep) {
-            case Consensus::BuriedDeployment::DEPLOYMENT_SEGWIT:
+            case Consensus::BuriedDeployment::BURIED_DEPLOYMENT_SEGWIT:
                 consensus.SegwitHeight = int{height};
                 break;
             case Consensus::BuriedDeployment::DEPLOYMENT_HEIGHTINCB:
@@ -459,10 +469,10 @@ public:
             consensus.vDeployments[deployment_pos].min_activation_height = version_bits_params.min_activation_height;
         }
 
-        genesis = CreateGenesisBlock(1751625777, 4931021, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1296688602, 0, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("000003950cda92cedc6f9e0729531a8fae870795d29117adfbcc47cc9dc5eb33"));
-        assert(genesis.hashMerkleRoot == uint256S("6cf7734edb52b59e22b13e1a47992e99e8a4bd8146925dfc449350a4f9f010d5"));
+        assert(consensus.hashGenesisBlock == uint256S("7374775866c9f72db31c45bd736bb0b41f4bc54409d792bf2a3679aaa4ed75f5"));
+        assert(genesis.hashMerkleRoot == uint256S("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();

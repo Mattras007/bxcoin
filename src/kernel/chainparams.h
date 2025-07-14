@@ -30,9 +30,11 @@ struct CCheckpointData {
     MapCheckpoints mapCheckpoints;
 
     int GetHeight() const {
-        const auto& final_checkpoint = mapCheckpoints.rbegin();
-        return final_checkpoint->first /* height */;
-    }
+    if (mapCheckpoints.empty()) return 0; // or -1 if you prefer
+    const auto& final_checkpoint = mapCheckpoints.rbegin();
+    return final_checkpoint->first;
+}
+
 };
 
 struct AssumeutxoHash : public BaseHash<uint256> {
@@ -181,6 +183,11 @@ protected:
     CCheckpointData checkpointData;
     std::vector<AssumeutxoData> m_assumeutxo_data;
     ChainTxData chainTxData;
+    std::string m_customLabel;
+
+public:
+    const std::string& CustomLabel() const { return m_customLabel; }
 };
+
 
 #endif // BITCOIN_KERNEL_CHAINPARAMS_H

@@ -19,23 +19,27 @@ namespace Consensus {
  * A buried deployment is one where the height of the activation has been hardcoded into
  * the client implementation long after the consensus change has activated. See BIP 90.
  */
+// Add this to consensus/params.h
+
+// Buried deployments: for consensus changes activated by block height
 enum BuriedDeployment : int16_t {
-    // buried deployments get negative values to avoid overlap with DeploymentPos
     DEPLOYMENT_HEIGHTINCB = std::numeric_limits<int16_t>::min(),
     DEPLOYMENT_CLTV,
     DEPLOYMENT_DERSIG,
     DEPLOYMENT_CSV,
-    DEPLOYMENT_SEGWIT,
+    BURIED_DEPLOYMENT_SEGWIT,  // renamed from DEPLOYMENT_SEGWIT to avoid conflict
 };
-constexpr bool ValidDeployment(BuriedDeployment dep) { return dep <= DEPLOYMENT_SEGWIT; }
+constexpr bool ValidDeployment(BuriedDeployment dep) { return dep <= BURIED_DEPLOYMENT_SEGWIT; }
 
+// Version bits deployments: soft-fork activations via version bits signaling
 enum DeploymentPos : uint16_t {
     DEPLOYMENT_TESTDUMMY,
-    DEPLOYMENT_TAPROOT, // Deployment of Schnorr/Taproot (BIPs 340-342)
-    // NOTE: Also add new deployments to VersionBitsDeploymentInfo in deploymentinfo.cpp
+    DEPLOYMENT_TAPROOT,
+    DEPLOYMENT_SEGWIT,  // version bits SegWit deployment
     MAX_VERSION_BITS_DEPLOYMENTS
 };
 constexpr bool ValidDeployment(DeploymentPos dep) { return dep < MAX_VERSION_BITS_DEPLOYMENTS; }
+
 
 /**
  * Struct for each individual consensus rule change using BIP9.
@@ -139,7 +143,7 @@ struct Params {
             return BIP66Height;
         case DEPLOYMENT_CSV:
             return CSVHeight;
-        case DEPLOYMENT_SEGWIT:
+        case BURIED_DEPLOYMENT_SEGWIT:
             return SegwitHeight;
         } // no default case, so the compiler can warn about missing cases
         return std::numeric_limits<int>::max();
