@@ -156,3 +156,4 @@ dist/
 /guix-build-*
 
 /ci/scratch/
+src/qt/bxcoin-qt
